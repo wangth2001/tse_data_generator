@@ -1,0 +1,46 @@
+# 数据生成配置文件
+
+input_data_list_path: 'data_list/vox2.scp'  # clean 说话人数据列表
+sample_rate: 16000
+
+output_times: 3  # 输出数据量的倍率
+output_data_path: 'output'
+output_data_list_path: 'output.list'
+
+# 注意：Stage 1 (混叠说话人语音) 与 Stage 2 (数据增强) 为顺序关系
+
+# Stage 1: 混叠说话人语音
+mix_speech: True  # True or False
+mix_speech_args:
+  mix_speech_list_path: 'data_list/speech.scp'
+  mix_number: 1  # 对输入音频混叠几条语音
+  snr_sampling: 'uniform'  # uniform or gaussian, 使用均匀采样则需指定 snr 的最大值与最小值，使用高斯采样则需指定 snr 的均值与方差
+  snr_min: -3.0  # snr 采样的最小值，仅在 uniform 采样方式下有效
+  snr_max: 3.0  # snr 采样的最大值，仅在 uniform 采样方式下有效
+  snr_mean: 0.0  # snr 采样的均值，仅在 gaussian 采样方式下有效
+  snr_var: 1.0  # snr 采样的方差，仅在 gaussian 采样方式下有效
+
+
+# Stage 2: 加入噪声/背景音乐/混响。各个参数含义及要求同上。
+augmentation: True
+augmentation_args:
+  noise: True
+  noise_args:
+    noise_list_path: 'data_list/noise.scp'
+    snr_sampling: 'uniform'  # uniform or gaussian
+    snr_min: 0.0
+    snr_max: 15.0
+    snr_mean: 7.5
+    snr_var: 5.0
+  music: True
+  music_args:
+    music_list_path: 'data_list/music.scp'
+    snr_sampling: 'uniform'  # uniform or gaussian
+    snr_min: 5.0
+    snr_max: 15.0
+    snr_mean: 10.0
+    snr_var: 5.0
+  reverb: True
+  reverb_args:
+    reverb_list_path: 'data_list/reverb.scp'
+    
